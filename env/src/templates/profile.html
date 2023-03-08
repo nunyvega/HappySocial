@@ -27,7 +27,8 @@
 	<section>
 			<div class="feature-photo">
 				<figure><img src="{% static 'images/resources/timeline-1.jpg' %}" alt=""></figure>
-				<form>
+				<form action="/follow" method="POST">
+					{% csrf_token %}
 					<div class="add-btn">
 					<span style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Home</a></u></b></span>
 					<span style="color: white; font-size: 27px;">
@@ -42,9 +43,26 @@
 
 						</b>
 					</span>
-					<span style="color: white; font-size: 27px;"><b>1.7m followers</b></span>
-					<span style="color: white; font-size: 27px;"><b>3.5k following</b></span>
-					<a href="" title="" data-ripple=""><button style="background-color: #ffc0cb; border: #ffc0cb;">Follow</button></a>
+					<span style="color: white; font-size: 27px;">
+						<b>
+						{% if user_followers == 1 %}
+							{{user_followers}} follower
+						{% else %}
+							{{user_followers}} followers
+						{% endif %}
+
+					</b>
+				</span>
+					<span style="color: white; font-size: 27px;"><b>{{user_following}} following</b></span>
+
+					<input type="hidden" name="follower" value="{{user.username}}">
+					<input type="hidden" name="user" value="{{user_object.username}}">
+
+					{% if user.username == user_object.username %}
+					<a  href="/settings" style="background-color: #ffc0cb; border: #ffc0cb;">Account settings</a>
+					{% else %}
+					<button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{ follow_status|yesno:"Unfollow,Follow" }}</button>
+					{% endif %}
 					
 					</div>
 				</form>
