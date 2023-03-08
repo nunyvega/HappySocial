@@ -3,12 +3,19 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Profile
+from .models import Profile, Post, LikePost
 
 # Create your views here.
 @login_required(login_url='signin')
 def index(request):
-    return render(request, 'index.html')
+    # First get object and the use it to get the profile
+    user_object = User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+
+    # Get all posts
+    posts = Post.objects.all()
+
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts})
 
 def signup(request):
     if request.method == 'POST':
@@ -31,13 +38,12 @@ def signup(request):
             # Log user in and redirect to settings
                 user = auth.authenticate(username=username, password=password)
                 auth.login(request, user)
-                return redirect('settings')
 
             # Create profile object for the user
                 user_model = User.objects.get(username=username)
                 new_profile = Profile(user=user_model, id_user=user_model.id)   
                 new_profile.save()
-                return redirect('signup')
+                return redirect('settings')
         else:
             messages.info(request, 'Password not matching')
             return redirect('signup')        
@@ -95,3 +101,65 @@ def settings(request):
         return redirect('settings')
 
     return render(request, 'settings.html', {'user_profile': user_profile})
+
+@login_required(login_url='signin')
+def upload(request):
+    if request.method == 'POST':
+        image = request.FILES.get('image_upload')
+        caption = request.POST['caption']
+        user = request.user.username
+
+        new_post = Post.objects.create(user=user, image=image, caption=caption)   
+        new_post.save()
+
+        return redirect('/')
+    else:
+        return redirect('/')
+
+@login_required(login_url='signin')
+def like_post(request):
+    print('inside')
+    if request.method == 'GET':
+        print('2')
+        username = request.user.username
+        post_id = request.GET.get('post_id')
+
+        post = Post.objects.get(id=post_id)
+        print('3')
+        like_filter = LikePost.objects.filter(post_id=post_id, username=username).first()
+        print('the value of like_filter is: ', like_filter)
+
+        if like_filter == None:
+            print('no like')
+            new_like = LikePost.objects.create(post_id=post_id, username=username)
+            new_like.save()
+            post.no_of_likes += 1
+            post.save()
+            print('saved')
+
+        else:
+            print('liked by user')
+            like_filter.delete()
+            post.no_of_likes -= 1
+            post.save()
+            print('removed')
+
+        return redirect('/')
+
+    else:
+        return redirect('/')
+
+@login_required(login_url='signin')
+def profile(request, pk):
+    user_object = User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+    user_posts = Post.objects.filter(user=pk)
+    user_posts_length = len(user_posts)
+
+    context = {
+        'user_profile': user_profile,
+        'user_object': user_object,
+        'user_posts': user_posts,
+        'user_posts_length': user_posts_length,
+    }
+    return render(request, 'profile.html', context)
