@@ -148,6 +148,10 @@ def upload(request):
         caption = request.POST['caption']
         user = request.user.username
 
+        if not user or (not image and not caption):
+            print('nada')
+            return redirect('/')
+        
         new_post = Post.objects.create(user=user, image=image, caption=caption)   
         new_post.save()
 
@@ -258,3 +262,37 @@ def search(request):
 
         username_profile_list = list(chain(*username_profile_list))
     return render(request, 'search.html', {'user_profile': user_profile, 'username_profile_list': username_profile_list})
+
+
+@login_required(login_url='signin')
+def friends(request):
+    ## get all the friends of the user
+    user_object = User.objects.get(username=request.user.username)
+    friends = FollowersCount.objects.filter(follower=user_object.username)
+    friends_list = []
+    username_profile_list = []
+
+    for friend in friends:
+        friends_list.append(friend.user)
+
+    for ids in friends_list:
+        user = User.objects.get(username=ids)
+        profile_lists = Profile.objects.get(user=user.id)
+        username_profile_list.append(profile_lists)
+
+    print('####Friends are', username_profile_list)
+
+    return render(request, 'friends.html', {'friends_list': username_profile_list, 'user_object' : user_object})
+
+@login_required(login_url='signin')
+def unfollow(request, pk):
+    if request.method == 'POST':
+        follower = request.user.username
+        user =  pk
+
+        if FollowersCount.objects.filter(follower=follower, user=user).exists():
+            delete_follow = FollowersCount.objects.filter(follower=follower, user=user).first()
+            delete_follow.delete()
+            return redirect('/friends')
+    else:
+        return redirect('/')

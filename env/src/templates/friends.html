@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Friends</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px;
+            width: calc(33.33% - 20px);
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-title {
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-text {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .unfollow-button {
+            display: block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .unfollow-button:hover {
+            background-color: #222;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3 style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Go back home</a></u></b></h3>
+
+        <h1>Friends of {{ user_object.username }}</h1>
+    </header>
+    <div class="container">
+
+        {% if friends_list %}
+            {% for friend in friends_list %}
+                <div class="card">
+                    <img class="card-image" src="{{ friend.profileimg.url }}" alt="Profile picture">
+                    <div class="card-content">
+                        <h2 class="card-title">{{ friend.user.first_name }} {{ friend.user.last_name }}</h2>
+                        <p class="card-text">{{ friend.bio }}</p>
+                        <form method="POST" action="/unfollow/{{ friend.user.username }}" style="margin:0;">
+                            {% csrf_token %}
+                            <button class="unfollow-button">Unfollow</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You don't have any friends yet!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
