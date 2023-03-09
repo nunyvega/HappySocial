@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-1=o)$qv#iy)aipx&9g^af7)i3_a_4yq+^1@-v(8bxo%!#po6-7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'coursera-apps.org'
+]
 
 
 # Application definition
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'coreApp',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'social.wsgi.application'
+ASGI_APPLICATION = "social.routing.application"
 
 
 # Database

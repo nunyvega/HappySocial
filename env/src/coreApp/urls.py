@@ -15,4 +15,7 @@ urlpatterns = [
     path('search', views.search, name='search'),
     path('friends', views.friends, name='friends'),
     path('unfollow/<str:pk>', views.unfollow, name='unfollow'),
+    path('chat/', views.chat, name='chat'),
+    path('chat/<str:room_name>/', views.room, name='room'),
+
 ]
