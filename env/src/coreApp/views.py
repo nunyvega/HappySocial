@@ -1,17 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Profile, Post, LikePost, FollowersCount
+from .serializers import PostSerializer, ProfileSerializer
 from itertools import chain
 import random
 
 # Create your views here.
 @login_required(login_url='signin')
 def index(request):
+
+    if request.user.is_staff:
+        return redirect('admin:index')
     # First get object and the use it to get the profile
     user_object = User.objects.get(username=request.user.username)
+    print(user_object)
     user_profile = Profile.objects.get(user=user_object)
 
     user_following_list = []
@@ -113,6 +118,9 @@ def signout(request):
 
 @login_required(login_url='signin')
 def settings(request):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     user_profile = Profile.objects.get(user=request.user)
 
     if request.method == 'POST':
@@ -194,6 +202,9 @@ def like_post(request):
 
 @login_required(login_url='signin')
 def profile(request, pk):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     user_object = User.objects.get(username=pk)
     user_profile = Profile.objects.get(user=user_object)
     user_posts = Post.objects.filter(user=pk)
@@ -242,6 +253,9 @@ def follow(request):
 
 @login_required(login_url='signin')
 def search(request):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
 
@@ -266,6 +280,8 @@ def search(request):
 
 @login_required(login_url='signin')
 def friends(request):
+    if request.user.is_staff:
+        return redirect('admin:index')
     ## get all the friends of the user
     user_object = User.objects.get(username=request.user.username)
     friends = FollowersCount.objects.filter(follower=user_object.username)
@@ -298,10 +314,63 @@ def unfollow(request, pk):
         return redirect('/')
 
 
+## Logic for chat app
 def chat(request):
     return render(request, 'chat/index.html')
 
 def room(request, room_name):
     return render(request, 'chat/room.html', {
-        'room_name': room_name
+        'room_name': room_name, 'user': request.user.username
     })
+
+
+### API logic for endpoints
+# Only for admins
+@login_required(login_url='signin')
+def all_posts_list_api(request):
+    if request.user.is_staff:
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse({'posts':serializer.data})
+    else:
+        return HttpResponseForbidden('You do not have permission to access this resource.')
+
+@login_required(login_url='signin')
+def user_posts_api(request, user):
+    if request.user.username != user and not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to access this resource.')
+    
+    user_posts = Post.objects.filter(user=user)
+    serializer = PostSerializer(user_posts, many=True)
+    return JsonResponse({'posts': serializer.data})
+
+@login_required(login_url='signin')
+def post_detail_api(request, pk):
+    post = Post.objects.get(id=pk)
+
+    if request.user.username != post.user and not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to access this resource.')
+
+    post = Post.objects.get(id=pk)
+    serializer = PostSerializer(post, many=False)
+    return JsonResponse({'post': serializer.data})
+
+@login_required(login_url='signin')
+def profile_detail_api(request, pk):
+    user_object = User.objects.get(username=pk)
+    profile = Profile.objects.get(user=user_object)
+
+    if request.user.username != profile.user.username and not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to access this resource.')
+
+    serializer = ProfileSerializer(profile, many=False)
+    return JsonResponse({'profile': serializer.data})
+
+@login_required(login_url='signin')
+def all_profiles_list_api(request):
+    if request.user.is_staff:
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return JsonResponse({'profiles':serializer.data})
+    else:
+        return HttpResponseForbidden('You do not have permission to access this resource.')

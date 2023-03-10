@@ -3,24 +3,65 @@
 <head>
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
 </head>
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title">Chat Rooms</h2>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="room-select">Choose a chat room:</label>
+                <select id="room-select" class="form-control mb-3">
+                    <option value="" selected disabled hidden>Select a chat room...</option>
+                    <option value="social">Social</option>
+                    <option value="serious">Serious</option>
+                    <option value="fun">Fun</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new-room-input">Create a new chat room:</label>
+                <input id="new-room-input" type="text" class="form-control mb-3">
+            </div>
+            <button id="enter-room-button" class="btn btn-primary">Enter chat room</button>
+        </div>
+    </div>
+</div>
 
-    <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
+<script>
+    document.querySelector('#room-select').onchange = function () {
+        document.querySelector('#new-room-input').value = '';
+    };
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
-        };
-    </script>
+    document.querySelector('#enter-room-button').onclick = function () {
+        const roomSelect = document.querySelector('#room-select');
+        const newRoomInput = document.querySelector('#new-room-input');
+        let roomName;
+        if (newRoomInput.value) {
+            roomName = newRoomInput.value;
+        } else if (roomSelect.value) {
+            roomName = roomSelect.value;
+        } else {
+            alert('Please select or enter a chat room name');
+            return;
+        }
+        window.location.pathname = '/chat/' + roomName + '/';
+    };
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clfTfP5qgytuOks7XQbJOMa/8IyJsz"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
 </body>
 </html>
