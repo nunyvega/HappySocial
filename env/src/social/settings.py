@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
     'rest_framework',
     'coreApp',
     'channels',
