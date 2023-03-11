@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Profile, Post, LikePost, FollowersCount
 
-# Register your models here.
+# Register modules to show them in the admin panel
+
 admin.site.register(Profile)
 admin.site.register(Post)
 admin.site.register(LikePost)
