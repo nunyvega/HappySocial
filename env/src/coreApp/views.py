@@ -16,7 +16,6 @@ def index(request):
         return redirect('admin:index')
     # First get object and the use it to get the profile
     user_object = User.objects.get(username=request.user.username)
-    print(user_object)
     user_profile = Profile.objects.get(user=user_object)
 
     user_following_list = []
@@ -169,31 +168,23 @@ def upload(request):
 
 @login_required(login_url='signin')
 def like_post(request):
-    print('inside')
     if request.method == 'GET':
-        print('2')
         username = request.user.username
         post_id = request.GET.get('post_id')
 
         post = Post.objects.get(id=post_id)
-        print('3')
         like_filter = LikePost.objects.filter(post_id=post_id, username=username).first()
-        print('the value of like_filter is: ', like_filter)
 
         if like_filter == None:
-            print('no like')
             new_like = LikePost.objects.create(post_id=post_id, username=username)
             new_like.save()
             post.no_of_likes += 1
             post.save()
-            print('saved')
 
         else:
-            print('liked by user')
             like_filter.delete()
             post.no_of_likes -= 1
             post.save()
-            print('removed')
 
         return redirect('/')
 
@@ -211,6 +202,9 @@ def profile(request, pk):
     user_posts_length = len(user_posts)
 
     follower = request.user.username
+    visitor_object = User.objects.get(username=request.user.username)
+    visitor_profile = Profile.objects.get(user=visitor_object)
+
     user = pk
 
     if FollowersCount.objects.filter(follower=follower, user=user).exists():
@@ -229,7 +223,8 @@ def profile(request, pk):
         'user_posts_length': user_posts_length,
         'follow_status': follow_status,
         'user_followers': user_followers,
-        'user_following': user_following
+        'user_following': user_following,
+        'visitor_profile': visitor_profile
     }
     return render(request, 'profile.html', context)
 
@@ -316,11 +311,17 @@ def unfollow(request, pk):
 
 ## Logic for chat app
 def chat(request):
-    return render(request, 'chat/index.html')
+    visitor_object = User.objects.get(username=request.user.username)
+    visitor_profile = Profile.objects.get(user=visitor_object)
+
+    return render(request, 'chat/index.html', {'visitor_profile': visitor_profile})
 
 def room(request, room_name):
+    visitor_object = User.objects.get(username=request.user.username)
+    visitor_profile = Profile.objects.get(user=visitor_object)
+
     return render(request, 'chat/room.html', {
-        'room_name': room_name, 'user': request.user.username
+        'room_name': room_name, 'user': request.user.username, 'visitor_profile': visitor_profile
     })
 
 

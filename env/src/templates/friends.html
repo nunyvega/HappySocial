@@ -1,119 +1,142 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Friends</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-        }
+<html lang="en">
+  <head>
+    <title>HappySocial</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-5">
+      <a class="navbar-brand" href="/"
+        ><h1 class="text-primary">HappySocial</h1></a
+      >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <img
+                src="{{user_profile.profileimg.url}}"
+                alt="User Profile"
+                class="img-thumbnail my-profile rounded-circle"
+                style="height: 50px; width: 50px"
+              />
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/profile/{{user_profile.user}}"
+                >Your profile</a
+              >
+              <a class="dropdown-item" href="/settings">Settings</a>
+              <a class="dropdown-item" href="/signout">Log out</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        h1 {
-            margin: 0;
-            font-size: 36px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            background-color: #f9f9f9;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 10px;
-            width: calc(33.33% - 20px);
-            min-width: 200px;
-            max-width: 300px;
-        }
-
-        .card-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .card-content {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .card-title {
-            margin-top: 0;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .card-text {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #666;
-        }
-
-        .unfollow-button {
-            display: block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-        }
-
-        .unfollow-button:hover {
-            background-color: #222;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h3 style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Go back home</a></u></b></h3>
-
-        <h1>Friends of {{ user_object.username }}</h1>
-    </header>
-    <div class="container">
-
-        {% if friends_list %}
-            {% for friend in friends_list %}
-                <div class="card">
-                    <img class="card-image" src="{{ friend.profileimg.url }}" alt="Profile picture">
-                    <div class="card-content">
-                        <h2 class="card-title">{{ friend.user.first_name }} {{ friend.user.last_name }}</h2>
-                        <p class="card-text">{{ friend.bio }}</p>
-                        <form method="POST" action="/unfollow/{{ friend.user.username }}" style="margin:0;">
-                            {% csrf_token %}
-                            <button class="unfollow-button">Unfollow</button>
-                        </form>
-                    </div>
+<!-- Main Content -->
+<!-- Main Content -->
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Your Friends</h4>
                 </div>
-            {% endfor %}
-        {% else %}
-            <p>You don't have any friends yet!</p>
-        {% endif %}
+                <div class="card-body">
+                    {% if friends_list %}
+                    {% for friend in friends_list %}
+                    <div class="card mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                <img src="{{ friend.profileimg.url }}" class="card-img img-thumbnail rounded-circle" alt="Profile Picture">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">@{{ friend.user }}</h5>
+                                    <p class="card-text">{{ friend.bio }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="/profile/{{ friend.user }}" class="btn btn-primary">Visit Profile</a>
+                                        <form method="POST" action="/unfollow/{{ friend.user }}" style="margin:0;">
+                                            {% csrf_token %}
+                                            <button class="btn btn-danger">Unfollow</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>You don't have any friends yet!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+  
+  
+     <!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+  integrity="sha384-cPMzH/n3qO3pT7wE8WdoI0R/70AxIKB6gEKUZBCNR/Ua1Rz6CBz+W6nnwvE1xQHj"
+  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+  crossorigin="anonymous"></script>
+   
+<style>  
+.card-img {
+    width: 100px;
+    height: 100px;
+  object-fit: cover;
+
+}
+.my-profile, .recommended-profile {
+   width: 60px;
+   height: 100%;
+   object-fit: cover;
+}
+body {
+            background-image: url("{% static 'assets/images/bg.jpeg' %}");
+            background-size: cover;
+        }
+</style>
 </body>
+</html>
+  </body>
 </html>
