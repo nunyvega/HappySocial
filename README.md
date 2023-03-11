@@ -1,8 +1,8 @@
 # HappySocial
 
 [![Python](https://img.shields.io/badge/Python-3.9-blue)](https://www.python.org/downloads/release/python-390/)
-[![Django](https://img.shields.io/badge/Django-4.0-green)](https://docs.djangoproject.com/en/3.2/releases/3.2/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0.0--beta1-purple)](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+[![Django](https://img.shields.io/badge/Django-3.2.9-green)](https://docs.djangoproject.com/en/3.2/releases/3.2/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-4.3.1-purple)](https://getbootstrap.com/docs/4.3/getting-started/introduction/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 HappySocial is a social network web application built with Django and Bootstrap. It allows users to create profiles, connect with friends, post messages, and participate in chat rooms.
@@ -18,18 +18,18 @@ HappySocial is a social network web application built with Django and Bootstrap.
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository or download the zip with the code:
 
 ```bash
-git clone https://github.com/<your_username>/happysocial.git
+git clone https://github.com/nunyvega/social.git
 ```
 
 2. Create a virtual environment and activate it:
 
 ```bash
-cd happysocial
-python3 -m venv env
-source env/bin/activate
+cd src
+pip install virtualenvwrapper
+mkvirtualenv env1
 ```
 
 3. Install the required packages:
@@ -40,6 +40,7 @@ pip install -r requirements.txt
 
 4. Run the migrations:
 ```bash
+python manage.py makemigrations
 python manage.py migrate
 ````
 
@@ -53,7 +54,15 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-7. Open a web browser and go to http://localhost:8000/ to access the application.
+7. Install and start Redis
+```bash
+For mac:
+brew install redis
+For windows:
+sudo apt-get install redis
+redis-server
+```
+8. Open a web browser and go to http://localhost:8000/ to access the application.
 
 
 ## Credit
