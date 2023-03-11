@@ -49,7 +49,9 @@
 			<div class="card p-3">
 			  <p class="text-secondary text-center">{{ post.created_at }}</p>
 			  {% if post.image %}
-			  <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+			  <a href="#" data-toggle="modal" data-target="#postModal{{ post.id }}">	
+			  	<img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+			  </a>
 			  {% endif %}
 			  <div class="card-body">
 				<p class="card-text text-center">{{ post.caption }}</p>
@@ -63,5 +65,22 @@
 	</div>
   </div>
   
+  <!-- Modal -->
+{% for post in user_posts reversed %}
+{% if post.image %}
+<div class="modal fade" id="postModal{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="postModalLabel{{ post.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <img src="{{ post.image.url }}" class="img-fluid" alt="Post Image">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
   {% endblock %}
 

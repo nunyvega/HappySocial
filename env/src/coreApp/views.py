@@ -230,6 +230,9 @@ def profile(request, pk):
 
 @login_required(login_url='signin')
 def follow(request):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     if request.method == 'POST':
         follower = request.POST['follower']
         user = request.POST['user']
@@ -300,6 +303,9 @@ def friends(request):
 
 @login_required(login_url='signin')
 def unfollow(request, pk):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     if request.method == 'POST':
         follower = request.user.username
         user =  pk
@@ -313,13 +319,21 @@ def unfollow(request, pk):
 
 
 ## Logic for chat app
+@login_required(login_url='signin')
 def chat(request):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     visitor_object = User.objects.get(username=request.user.username)
     visitor_profile = Profile.objects.get(user=visitor_object)
 
     return render(request, 'chat/index.html', {'visitor_profile': visitor_profile})
 
+@login_required(login_url='signin')
 def room(request, room_name):
+    if request.user.is_staff:
+        return redirect('admin:index')
+
     visitor_object = User.objects.get(username=request.user.username)
     visitor_profile = Profile.objects.get(user=visitor_object)
 
