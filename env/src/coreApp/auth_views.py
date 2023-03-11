@@ -66,7 +66,7 @@ def signup(request):
 #   - request: A request object that contains metadata about the current request
 #   Returns:
 #   - A render object that renders the 'signin.html' template if the request method is GET.
-#   If the request method is POST, the function attempts to authenticate the user's login 
+#   If the request method is POST, the function attempts to authenticate the user's login
 #   credentials and redirects to the home page if the authentication is successful.
 ##
 def signin(request):

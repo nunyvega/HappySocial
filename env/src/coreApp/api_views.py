@@ -62,6 +62,7 @@ def post_detail_api(request, pk):
     serializer = PostSerializer(post, many=False)
     return JsonResponse({"post": serializer.data})
 
+
 ## API view to get the data of a profile (only accessible to profile owner and admins)
 # Args:
 # - request: A request object that contains metadata about the current request
@@ -82,6 +83,7 @@ def profile_detail_api(request, pk):
 
     serializer = ProfileSerializer(profile, many=False)
     return JsonResponse({"profile": serializer.data})
+
 
 ## API view to get all profiles (only accessible to admins)
 # Args:

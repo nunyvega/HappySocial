@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, auth
-from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Post, LikePost, FollowersCount
 from itertools import chain
@@ -14,7 +13,7 @@ import random
 #   Args:
 #   - request: A request object that contains metadata about the current request
 #   Returns:
-#   - A render object that renders the 'index.html' template with the user_profile, posts, 
+#   - A render object that renders the 'index.html' template with the user_profile, posts,
 #   and suggestions_username_profile_list as context data.
 ##
 @login_required(login_url="signin")
@@ -26,7 +25,7 @@ def index(request):
     # Get current user profile
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
-    
+
     # Get users that the current user is following
     user_following_list = []
     user_following = FollowersCount.objects.filter(follower=request.user.username)
@@ -129,6 +128,7 @@ def settings(request):
         return redirect("settings")
 
     return render(request, "settings.html", {"user_profile": user_profile})
+
 
 ## Upload image and caption as a new post to the website.
 #   Args:
@@ -278,7 +278,7 @@ def follow(request):
 #   Args:
 #   - request: A request object that contains metadata about the current request
 #   Returns:
-#   - A render object that renders the 'search.html' template with the user_profile and 
+#   - A render object that renders the 'search.html' template with the user_profile and
 #   username_profile_list as context data.
 ##
 @login_required(login_url="signin")
@@ -317,7 +317,7 @@ def search(request):
 #   Args:
 #   - request: A request object that contains metadata about the current request
 #   Returns:
-#   - Object with the 'friends.html' template with the friends_list, user_object, 
+#   - Object with the 'friends.html' template with the friends_list, user_object,
 #   and visitor_profile as context data.
 ##
 @login_required(login_url="signin")
@@ -353,7 +353,6 @@ def friends(request):
             "visitor_profile": visitor_profile,
         },
     )
-
 
 
 ## Unfollow a user
@@ -398,6 +397,7 @@ def chat(request):
 
     return render(request, "chat/index.html", {"visitor_profile": visitor_profile})
 
+
 ## Display the chat room page
 #   Args:
 #   - request: A request object that contains metadata about the current request
@@ -422,5 +422,3 @@ def room(request, room_name):
             "visitor_profile": visitor_profile,
         },
     )
-
-
