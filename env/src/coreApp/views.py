@@ -283,6 +283,9 @@ def friends(request):
     friends_list = []
     username_profile_list = []
 
+    visitor_object = User.objects.get(username=request.user.username)
+    visitor_profile = Profile.objects.get(user=visitor_object)
+
     for friend in friends:
         friends_list.append(friend.user)
 
@@ -293,7 +296,7 @@ def friends(request):
 
     print('####Friends are', username_profile_list)
 
-    return render(request, 'friends.html', {'friends_list': username_profile_list, 'user_object' : user_object})
+    return render(request, 'friends.html', {'friends_list': username_profile_list, 'user_object' : user_object, 'visitor_profile': visitor_profile})
 
 @login_required(login_url='signin')
 def unfollow(request, pk):

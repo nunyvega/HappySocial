@@ -1,75 +1,13 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>HappySocial</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+{% extends 'base.html' %}
+  {% block title %}Settings | HappySocial{% endblock %}
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light px-5">
-      <a class="navbar-brand" href="/"
-        ><h1 class="text-primary">HappySocial</h1></a
-      >
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <img
-                src="{{user_profile.profileimg.url}}"
-                alt="User Profile"
-                class="img-thumbnail my-profile rounded-circle"
-                style="height: 50px; width: 50px"
-              />
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/profile/{{user_profile.user}}"
-                >Your profile</a
-              >
-              <a class="dropdown-item" href="/settings">Settings</a>
-              <a class="dropdown-item" href="/signout">Log out</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  {% block header %}
+    {% include 'header.html' with user_profile=user_profile %}
+  {% endblock %}
+  {% block content %}
+  {% load static %}
 
-<!-- Main Content -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+      <div class="col-md-8 mx-auto">
         <div class="card">
           <div class="card-header">
             <h4 class="text-center">Update Profile</h4>
@@ -100,20 +38,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  
-     <!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-  integrity="sha384-cPMzH/n3qO3pT7wE8WdoI0R/70AxIKB6gEKUZBCNR/Ua1Rz6CBz+W6nnwvE1xQHj"
-  crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-  crossorigin="anonymous"></script>
-   
+
+{% block scripts-styles %}
 <style>  
 .my-profile, .recommended-profile {
    width: 60px;
@@ -125,7 +51,5 @@ body {
             background-size: cover;
         }
 </style>
-</body>
-</html>
-  </body>
-</html>
+{% endblock %}
+{% endblock %}

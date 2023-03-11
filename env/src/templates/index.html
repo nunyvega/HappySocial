@@ -1,46 +1,13 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>HappySocial</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends 'base.html' %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% block title %}Home | HappySocial{% endblock %}
 
-  </head>
-  <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light px-5">
-      <a class="navbar-brand" href="#"><h1 class="text-primary">HappySocial</h1></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="{{user_profile.profileimg.url}}" alt="User Profile" class="img-thumbnail my-profile rounded-circle" style="height:50px; width: 50px;">
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-               <a class="dropdown-item" href="/profile/{{user_profile.user}}">Your profile</a>
-               <a class="dropdown-item" href="/settings">Settings</a>
-              <a class="dropdown-item" href="/signout">Log out</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container-fluid my-3 align-items-center">
-      <div class="row mx-3">
+{% block header %}
+{% include 'header.html' with user_profile=user_profile %}
+{% endblock %}
+{% block content %}
 <!-- Left Section -->
+<div class="row mx-3">
 <div class="col-md-6 px-4 ml-4">
    {% if posts %}
       {% for post in posts reversed %}
@@ -50,20 +17,20 @@
       </div>
       <p class="text-secondary">{{post.created_at}} </p>
       {% if post.image %}
-      <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+      <img src="{{ post.image.url }}" class="card-img-top my-3" alt="Post Image">
       {% endif %}
       <div class="card-body">
-         <p class="card-text">{{ post.caption }}</p>
+         {% if post.caption %}
+            <p class="card-text border py-3 my-3 pl-3 border-light rounded bg-light">{{ post.caption }}</p>
+         {% endif %}
          <div class="d-flex justify-content-between align-items-center">
-            <div>
-            <a href="/like-post?post_id={{post.id}}" class="btn btn-link">
-               Like this
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
+            <a href="/like-post?post_id={{post.id}}">
+               <button class="btn btn-primary btn-lg btn-block mr-4 mb-3">Like this
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386Z"/>
-               </svg>
+               </svg></button>
             </a>
-            <p class="text-secondary">{{ post.no_of_likes }} likes</p>
-            </div>
+            <p class="text-secondary text-right">{{ post.no_of_likes }} likes  💙</p>
          </div>
       </div>
       </div>
@@ -88,19 +55,19 @@
      </div>
      <div class="card-body">
        {% for suggestion in suggestions_username_profile_list %}
-       <div class="card mb-3">
-         <div class="card-body">
+       <div class="card mb-2">
+         <div class="card-body mb-2">
            <div class="media">
              <img src="{{ suggestion.profileimg.url }}" class="mr-3 img-thumbnail recommended-profile rounded-circle" alt="Profile Image" style="height:50px; width: 50px;">
              <div class="media-body">
                <h5 class="mt-0"><a href="/profile/{{ suggestion.user }}">{{ suggestion.user }}</a></h5>
                <p class="text-secondary">{{ suggestion.bio }}</p>
                <!-- Visit profile button -->
-               <a href="/profile/{{ suggestion.user }}" class="btn btn-outline-primary btn-sm">Visit Profile</a>
+               <a href="/profile/{{ suggestion.user }}" class="btn btn-outline-primary btn-sm float-right">Visit Profile</a>
+             </div>
             </div>
-           </div>
          </div>
-       </div>
+      </div>
        {% endfor %}
      </div>
    </div>
@@ -163,30 +130,5 @@
      </div>
    </div>
 </div>
-
-
-   <!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-  integrity="sha384-cPMzH/n3qO3pT7wE8WdoI0R/70AxIKB6gEKUZBCNR/Ua1Rz6CBz+W6nnwvE1xQHj"
-  crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-  crossorigin="anonymous"></script>
-   
-<style>  
-.my-profile, .recommended-profile {
-   width: 60px;
-   height: 100%;
-   object-fit: cover;
-}
-body {
-            background-image: url("{% static 'assets/images/bg.jpeg' %}");
-            background-size: cover;
-        }
-        .card-img-top{    max-height: 300px;
-    object-fit: cover;}
-</style>
-</body>
-</html>
+</div>
+{% endblock %}
