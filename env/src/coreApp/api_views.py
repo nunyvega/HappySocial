@@ -49,7 +49,6 @@ def user_posts_api(request, user):
 # Returns:
 # - A JsonResponse object that contains post detail in serialized form
 @login_required(login_url="signin")
-@login_required(login_url="signin")
 def post_detail_api(request, pk):
     post = Post.objects.get(id=pk)
 

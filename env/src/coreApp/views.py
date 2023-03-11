@@ -292,6 +292,7 @@ def search(request):
     user_profile = Profile.objects.get(user=user_object)
 
     # Get profiles containing the username entered by the user
+    username = request.POST["username"]
     username_object = User.objects.filter(username__icontains=username)
     username_profile = []
     username_profile_list = []
