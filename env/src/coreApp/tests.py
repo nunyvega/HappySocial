@@ -12,6 +12,7 @@ import os
 # It uses the client object to Check the response status codes and returned data
 class TestAllPostsListAPI(TestCase):
     def setUp(self):
+        print('Setting up test environment for TestAllPostsListAPI')
         self.client = APIClient()
         self.user = User.objects.create_user(
             username="testuser", email="testuser@example.com", password="testpass"
@@ -30,11 +31,13 @@ class TestAllPostsListAPI(TestCase):
         )
 
     def test_all_posts_list_api_for_staff_user(self):
+        print('Testing test_all_posts_list_api_for_staff_user')
         self.client.force_login(self.staff_user)
         response = self.client.get(reverse("all_posts_list_api"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_all_posts_list_api_for_non_staff_user(self):
+        print('Testing test_all_posts_list_api_for_non_staff_user')
         self.client.force_login(self.user)
         response = self.client.get(reverse("all_posts_list_api"))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -44,11 +47,13 @@ class TestAllPostsListAPI(TestCase):
 # The tests ensure that the view returns the correct HTTP status codes and response data for various scenarios
 class UserPostsAPITest(TestCase):
     def setUp(self):
+        print('Setting up test environment for UserPostsAPITest')
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.post = Post.objects.create(user=self.user, caption="Test post")
 
     def test_user_posts_api_for_owner(self):
+        print('Testing test_user_posts_api_for_owner')
         self.client.login(username="testuser", password="testpass")
         response = self.client.get(
             reverse("user_posts_api", kwargs={"user": "testuser"})
@@ -58,6 +63,7 @@ class UserPostsAPITest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_posts_api_for_staff_user(self):
+        print('Testing test_user_posts_api_for_staff_user')
         self.user.is_staff = True
         self.user.save()
         self.client.login(username="testuser", password="testpass")
@@ -69,6 +75,7 @@ class UserPostsAPITest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_posts_api_for_non_owner_non_staff_user(self):
+        print('Testing test_user_posts_api_for_non_owner_non_staff_user')
         User.objects.create_user(username="nonowneruser", password="testpass")
         self.client.login(username="nonowneruser", password="testpass")
         response = self.client.get(
@@ -81,6 +88,7 @@ class UserPostsAPITest(TestCase):
 # The tests verify that the view returns the expected data  on each scenario. APIClient is used to simulate requests to the API.
 class TestPostDetailAPI(TestCase):
     def setUp(self):
+        print('Setting up test environment for TestPostDetailAPI')
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.post = Post.objects.create(
@@ -88,6 +96,7 @@ class TestPostDetailAPI(TestCase):
         )
 
     def test_post_detail_api_for_post_owner(self):
+        print('Testing test_post_detail_api_for_post_owner')
         self.client.login(username="testuser", password="testpass")
         url = reverse("post_detail_api", args=[self.post.id])
         response = self.client.get(url)
@@ -96,6 +105,7 @@ class TestPostDetailAPI(TestCase):
         self.assertEqual(response.json(), expected_data)
 
     def test_post_detail_api_for_admin(self):
+        print('Testing test_post_detail_api_for_admin')
         admin_user = User.objects.create_superuser(
             username="adminuser", email="admin@test.com", password="adminpass"
         )
@@ -107,6 +117,7 @@ class TestPostDetailAPI(TestCase):
         self.assertEqual(response.json(), expected_data)
 
     def test_post_detail_api_for_non_post_owner_non_admin(self):
+        print('Testing test_post_detail_api_for_non_post_owner_non_admin')
         non_admin_user = User.objects.create_user(
             username="nonadminuser", password="nonadminpass"
         )
@@ -119,6 +130,7 @@ class TestPostDetailAPI(TestCase):
 # Tests for ProfileDetailAPI view  for both the profile owner and the admin user.
 class TestProfileDetailAPI(TestCase):
     def setUp(self):
+        print('Setting up test environment for TestProfileDetailAPI')
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.profile = Profile.objects.create(
@@ -129,6 +141,7 @@ class TestProfileDetailAPI(TestCase):
         )
 
     def test_profile_detail_api_for_profile_owner(self):
+        print('Testing test_profile_detail_api_for_profile_owner')
         self.client.login(username="testuser", password="testpass")
         url = reverse("profile_detail_api", args=[self.user.username])
         response = self.client.get(url)
@@ -137,6 +150,7 @@ class TestProfileDetailAPI(TestCase):
         self.assertEqual(response.json(), expected_data)
 
     def test_profile_detail_api_for_admin(self):
+        print('Testing test_profile_detail_api_for_admin')
         admin_user = User.objects.create_superuser(
             username="adminuser",
             email="admin@test.com",
@@ -154,6 +168,7 @@ class TestProfileDetailAPI(TestCase):
 # It sets up a test client, creates a user and a profile, and tests the API endpoints for the profile detail
 class TestAllProfilesListAPI(APITestCase):
     def setUp(self):
+        print('Setting up test environment for TestAllProfilesListAPI')
         self.url = reverse("all_profiles_list_api")
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.profile = Profile.objects.create(
@@ -167,6 +182,7 @@ class TestAllProfilesListAPI(APITestCase):
         )
 
     def test_all_profiles_list_api_for_staff_user(self):
+        print('Testing test_all_profiles_list_api_for_staff_user')
         # log in as staff user
         self.client.login(username="adminuser", password="adminpass")
 
@@ -177,6 +193,7 @@ class TestAllProfilesListAPI(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_all_profiles_list_api_for_non_staff_user(self):
+        print('Testing test_all_profiles_list_api_for_non_staff_user')
         # log in as non-staff user
         self.client.login(username="testuser", password="testpass")
 
@@ -191,6 +208,7 @@ class TestAllProfilesListAPI(APITestCase):
 # It tests data validation, redirects, and template rendering
 class AuthenticationViewsTestCase(TestCase):
     def setUp(self):
+        print('Setting up test environment for AuthenticationViewsTestCase')
         self.client = Client()
         self.signup_url = reverse("signup")
         self.signin_url = reverse("signin")
@@ -200,6 +218,7 @@ class AuthenticationViewsTestCase(TestCase):
         )
 
     def test_signup_view(self):
+        print('Testing test_signup_view')
         # Test GET request to signup view
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
@@ -232,6 +251,7 @@ class AuthenticationViewsTestCase(TestCase):
         self.assertRedirects(response, self.signup_url)
 
     def test_signin_view(self):
+        print('Testing test_signin_view')
         # Test GET request to signin view
         response = self.client.get(self.signin_url)
         self.assertEqual(response.status_code, 200)
@@ -246,6 +266,7 @@ class AuthenticationViewsTestCase(TestCase):
         self.assertRedirects(response, self.signin_url)
 
     def test_signout_view(self):
+        print('Testing test_signout_view')
         # Log in user before testing signout
         self.client.login(username="testuser", password="testpass")
 
@@ -258,6 +279,7 @@ class AuthenticationViewsTestCase(TestCase):
 # It tests the template rendering and the context data
 class TestIndexView(TestCase):
     def tearDown(self):
+        print('Tearing down test environment for TestIndexView')
         # Delete profile images to avoid clutter
         if os.path.isfile(self.profile.profileimg.url):
             os.remove(self.profile.profileimg.url)
@@ -266,6 +288,7 @@ class TestIndexView(TestCase):
         super().tearDown()
 
     def setUp(self):
+        print('Setting up test environment for TestIndexView')
         self.username = "testuser"
         self.email = "testuser@test.com"
         self.password = "testpass123"
@@ -279,11 +302,13 @@ class TestIndexView(TestCase):
         self.feed = []
 
     def test_index_view_unauthenticated(self):
+        print('Testing test_index_view_unauthenticated')
         response = self.client.get(self.url)
         # It should redirect to the login page
         self.assertEqual(response.status_code, 302)
 
     def test_index_view_authenticated(self):
+        print('Testing test_index_view_authenticated')
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(self.url)
         # It shouldn't redirect, should show the index page
@@ -291,6 +316,7 @@ class TestIndexView(TestCase):
         self.assertTemplateUsed(response, "index.html")
 
     def test_index_view_feed(self):
+        print('Testing test_index_view_feed')
         self.client.login(username=self.username, password=self.password)
         for i in range(5):
             Post.objects.create(user=self.user.username, caption=f"Test post {i+1}")
@@ -304,6 +330,7 @@ class TestIndexView(TestCase):
 # Tests for the settings view (settings page) and the settings form
 class SettingsTestCase(TestCase):
     def tearDown(self):
+        print('Tearing down test environment for SettingsTestCase')
         # Delete profile images to avoid clutter
         if os.path.isfile(self.profile.profileimg.url):
             os.remove(self.profile.profileimg.url)
@@ -312,6 +339,7 @@ class SettingsTestCase(TestCase):
         super().tearDown()
 
     def setUp(self):
+        print('Setting up test environment for SettingsTestCase')
         self.client = Client()
         self.user = User.objects.create_user(
             username="testuser",
@@ -323,6 +351,7 @@ class SettingsTestCase(TestCase):
         )
 
     def test_settings_page_authenticated_user(self):
+        print('Testing test_settings_page_authenticated_user')
         self.client.login(username="testuser", password="testpass")
         response = self.client.get(reverse("settings"))
         self.assertEqual(response.status_code, 200)
@@ -330,6 +359,7 @@ class SettingsTestCase(TestCase):
         self.assertEqual(response.context["user_profile"], self.profile)
 
     def test_settings_update_authenticated_user(self):
+        print('Testing test_settings_update_authenticated_user')
         self.client.login(username="testuser", password="testpass")
         with open("media/blank-profile-picture.jpg", "rb") as image:
             response = self.client.post(
@@ -346,6 +376,7 @@ class SettingsTestCase(TestCase):
 # Tests for the profile view (profile page), follow/unfollow and search
 class ViewsTestCase(TestCase):
     def setUp(self):
+        print('Setting up test environment for ViewsTestCase')
         self.client = Client()
         self.user = User.objects.create_user(
             username="testuser", email="testuser@example.com", password="testpass"
@@ -367,6 +398,7 @@ class ViewsTestCase(TestCase):
         )
 
     def test_profile(self):
+        print('Testing test_profile')
         self.client.login(username="testuser", password="testpass")
         response = self.client.get(reverse("profile", args=[self.user.username]))
         self.assertTemplateUsed(response, "profile.html")
@@ -380,6 +412,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.context["visitor_profile"], self.user_profile)
 
     def test_follow_unfollow(self):
+        print('Testing test_follow_unfollow')
         self.client.login(username="testuser", password="testpass")
         response = self.client.post(
             reverse("follow"), {"follower": self.user.username, "user": "anotheruser"}
@@ -398,6 +431,7 @@ class ViewsTestCase(TestCase):
         )
 
     def test_search(self):
+        print('Testing test_search')
         self.client.login(username="testuser", password="testpass")
         response = self.client.post(reverse("search"), {"username": ""})
         self.assertEqual(response.status_code, 200)
@@ -407,6 +441,7 @@ class ViewsTestCase(TestCase):
 # Tests for the chat functionality, including the chat and the room views
 class ChatTestCase(TestCase):
     def setUp(self):
+        print('Setting up test environment for ChatTestCase')
         self.client = Client()
         self.user = User.objects.create_user(
             username="testuser", password="testpassword"
@@ -416,6 +451,7 @@ class ChatTestCase(TestCase):
         )
 
     def test_chat(self):
+        print('Testing test_chat')
         self.client.login(username="testuser", password="testpassword")
         response = self.client.get(reverse("chat"))
         self.assertEqual(response.status_code, 200)
@@ -425,6 +461,7 @@ class ChatTestCase(TestCase):
         )
 
     def test_room(self):
+        print('Testing test_room')
         self.client.login(username="testuser", password="testpassword")
         room_name = "test_room"
         response = self.client.get(reverse("room", args=[room_name]))
