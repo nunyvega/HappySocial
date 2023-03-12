@@ -274,6 +274,32 @@ def follow(request):
         return redirect("/")
 
 
+## Unfollow a user
+#   Args:
+#   - request: A request object that contains metadata about the current request
+#   - pk: The primary key of the user to unfollow
+#   Returns:
+#   - A redirect object that redirects to the friends page.
+##
+@login_required(login_url="signin")
+def unfollow(request, pk):
+    if request.user.is_staff:
+        return redirect("admin:index")
+
+    if request.method == "POST":
+        follower = request.user.username
+        user = pk
+
+        if FollowersCount.objects.filter(follower=follower, user=user).exists():
+            delete_follow = FollowersCount.objects.filter(
+                follower=follower, user=user
+            ).first()
+            delete_follow.delete()
+            return redirect("/friends")
+    else:
+        return redirect("/")
+
+
 ## Render the search page with a list of profiles containing the value entered by the user.
 #   Args:
 #   - request: A request object that contains metadata about the current request
@@ -354,32 +380,6 @@ def friends(request):
             "visitor_profile": visitor_profile,
         },
     )
-
-
-## Unfollow a user
-#   Args:
-#   - request: A request object that contains metadata about the current request
-#   - pk: The primary key of the user to unfollow
-#   Returns:
-#   - A redirect object that redirects to the friends page.
-##
-@login_required(login_url="signin")
-def unfollow(request, pk):
-    if request.user.is_staff:
-        return redirect("admin:index")
-
-    if request.method == "POST":
-        follower = request.user.username
-        user = pk
-
-        if FollowersCount.objects.filter(follower=follower, user=user).exists():
-            delete_follow = FollowersCount.objects.filter(
-                follower=follower, user=user
-            ).first()
-            delete_follow.delete()
-            return redirect("/friends")
-    else:
-        return redirect("/")
 
 
 ## Display the chat index page
